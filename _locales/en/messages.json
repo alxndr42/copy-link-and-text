@@ -1,0 +1,16 @@
+{
+  "extensionName": {
+    "message": "Copy Link and Text",
+    "description": "Name of the extension."
+  },
+
+  "extensionDescription": {
+    "message": "Copy links and their text to the clipboard, paste as HTML or Markdown.",
+    "description": "Description of the extension."
+  },
+
+  "menuItemTitle": {
+    "message": "Copy Link and Text",
+    "description": "Title of the context menu item."
+  }
+}
