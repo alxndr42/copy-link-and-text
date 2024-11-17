@@ -17,6 +17,7 @@
 
   "permissions": [
     "clipboardWrite",
-    "contextMenus"
+    "contextMenus",
+    "tabs"
   ]
 }

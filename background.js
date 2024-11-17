@@ -1,3 +1,5 @@
+'use strict';
+
 const MENU_ITEM_ID = 'copy-link-and-text';
 
 function escapeHTML (html) {
@@ -24,7 +26,7 @@ function copyLinkAndText (link, text) {
 browser.contextMenus.create({
     id: MENU_ITEM_ID,
     title: browser.i18n.getMessage('menuItemTitle'),
-    contexts: ['link'],
+    contexts: ['link', 'tab'],
   }
 );
 
@@ -34,5 +36,8 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.hasOwnProperty('linkUrl') && info.hasOwnProperty('linkText')) {
     copyLinkAndText(info.linkUrl, info.linkText);
+  }
+  else {
+    copyLinkAndText(tab.url, tab.title);
   }
 });
