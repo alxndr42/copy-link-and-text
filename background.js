@@ -1,7 +1,5 @@
 'use strict';
 
-const MENU_ITEM_ID = 'copy-link-and-text';
-
 var legacyBrowser = false;
 
 function escapeHTML (html) {
@@ -53,31 +51,42 @@ function copyToClipboard (links) {
   }
 }
 
+browser.commands.onCommand.addListener((command, tab) => {
+  if (command !== COMMAND_ID) {
+    return;
+  }
+
+  if (tab !== undefined) {
+    browser.tabs.sendMessage(tab.id, {'type': LINK_REQUEST});
+  } else {
+    browser.tabs.query({'active': true, 'currentWindow': true}).then(tabs => {
+      browser.tabs.sendMessage(tabs[0].id, {'type': LINK_REQUEST});
+    });
+  }
+});
+
 browser.contextMenus.create({
-    id: MENU_ITEM_ID,
+    id: COMMAND_ID,
     title: browser.i18n.getMessage('menuItemTitle'),
-    contexts: ['link', 'selection', 'tab'],
+    contexts: ['link', 'page', 'selection', 'tab'],
   }
 );
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId !== MENU_ITEM_ID) {
+  if (info.menuItemId !== COMMAND_ID) {
     return;
   }
 
   if (info.hasOwnProperty('linkUrl') && info.hasOwnProperty('linkText')) {
     copyToClipboard([{'url': info.linkUrl, 'text': info.linkText}]);
   }
-  else if (info.hasOwnProperty('selectionText')) {
-    browser.tabs.sendMessage(tab.id, {'type': 'clat.link_request'});
-  }
   else {
-    copyToClipboard([{'url': tab.url, 'text': tab.title}]);
+    browser.tabs.sendMessage(tab.id, {'type': LINK_REQUEST});
   }
 });
 
 browser.runtime.onMessage.addListener(message => {
-  if (message.type === 'clat.link_response') {
+  if (message.type === LINK_RESPONSE) {
     copyToClipboard(message.links);
   }
 });

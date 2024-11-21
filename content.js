@@ -1,7 +1,7 @@
 'use strict';
 
 function onMessage (message) {
-  if (message.type !== 'clat.link_request') {
+  if (message.type !== LINK_REQUEST) {
     return;
   }
 
@@ -22,11 +22,11 @@ function onMessage (message) {
     }
   }
 
-  if (links.length > 0) {
-    browser.runtime.sendMessage({'type': 'clat.link_response', 'links': links});
-  } else {
-    console.log('No links selected.')
+  if (links.length == 0) {
+    links.push({'url': document.URL, 'text': document.title})
   }
+
+  browser.runtime.sendMessage({'type': LINK_RESPONSE, 'links': links});
 }
 
 browser.runtime.onMessage.addListener(message => onMessage(message));
