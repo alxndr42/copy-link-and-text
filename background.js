@@ -2,8 +2,8 @@
 
 var legacyBrowser = false;
 
-function escapeHTML (html) {
-    return html
+function escapeHTML(text) {
+    return text
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
       .replaceAll('>', '&gt;')
@@ -11,15 +11,21 @@ function escapeHTML (html) {
       .replaceAll("'", '&#039;');
 }
 
+function escapeMarkdown(text) {
+    return escapeHTML(text)
+      .replaceAll('[', '&lsqb;')
+      .replaceAll(']', '&rsqb;');
+}
+
 function htmlLink(url, text) {
-  return `<a href="${escapeHTML(url)}">${escapeHTML(text)}</a>`;
+  return `<a href="${url}">${escapeHTML(text)}</a>`;
 }
 
 function markdownLink(url, text) {
-  return `[${escapeHTML(text)}](${escapeHTML(url)})`;
+  return `[${escapeMarkdown(text)}](${url})`;
 }
 
-function copyToClipboard (links) {
+function copyToClipboard(links) {
   let htmlValue = '';
   let textValue = '';
 
